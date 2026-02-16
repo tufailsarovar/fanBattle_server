@@ -10,8 +10,8 @@ let ioInstance = null;
 export const initSocket = (server) => {
   ioInstance = new Server(server, {
     cors: {
-      origin: [process.env.CLIENT_URL, process.env.ADMIN_URL],
-      methods: ["GET", "POST", "PUT", "DELETE"],
+      origin: "https://fan-battle.vercel.app",
+      methods: ["GET", "POST"],
       credentials: true,
     },
   });

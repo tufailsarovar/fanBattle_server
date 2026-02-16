@@ -7,13 +7,19 @@ dotenv.config();
 const app = express();
 
 /* ================= CORS FIX ================= */
+const allowedOrigins = ["https://fan-battle.vercel.app"];
+
 app.use(
   cors({
-    origin: [
-      "https://fan-battle.vercel.app",
-    ],
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
-  })
+  }),
 );
 
 /* =========================================== */
@@ -33,8 +39,6 @@ import leaderboardRoutes from "./routes/leaderboardRoutes.js";
 import likeRoutes from "./routes/likeRoutes.js";
 import analyticsRoutes from "./routes/analyticsRoutes.js";
 import removalRoutes from "./routes/removalRoutes.js";
-
-
 
 app.use("/api/analytics", analyticsRoutes);
 app.use("/api/likes", likeRoutes);
