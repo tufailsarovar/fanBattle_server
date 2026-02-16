@@ -2,11 +2,13 @@ import express from "express";
 import {
   createRemovalRequest,
   getRemovalRequests,
+  deleteRemovalRequest,
 } from "../controllers/removalController.js";
 
 const router = express.Router();
 
 router.post("/", createRemovalRequest);
-router.get("/", getRemovalRequests); // protect with admin middleware if needed
+router.get("/", getRemovalRequests);
+router.delete("/:id", deleteRemovalRequest);
 
-export default router;
+export default router;   // ✅ THIS LINE MUST EXIST

@@ -125,13 +125,16 @@ export const getTodayFollowers = async (req, res, next) => {
   }
 };
 
-/**
- * @desc    Create new follower (Admin)
- * @route   POST /api/followers
- */
 export const createFollower = async (req, res, next) => {
   try {
     const { name, username } = req.body;
+
+    if (!name || !username) {
+      return res.status(400).json({
+        success: false,
+        message: "Name and username required",
+      });
+    }
 
     const exists = await Follower.findOne({ username });
     if (exists) {
@@ -143,9 +146,10 @@ export const createFollower = async (req, res, next) => {
 
     const follower = await Follower.create({
       name,
-      username,
+      username: username.toLowerCase(),
       likesCount: 0,
       rankTier: "Bronze",
+      isSubscriber: false,
     });
 
     res.status(201).json({
@@ -156,6 +160,7 @@ export const createFollower = async (req, res, next) => {
     next(error);
   }
 };
+
 
 /**
  * @desc    Update follower (Admin)
@@ -191,13 +196,26 @@ export const updateFollower = async (req, res, next) => {
  * @desc    Delete follower (Admin)
  * @route   DELETE /api/followers/:id
  */
-export const deleteFollower = async (id) => {
-  const token = localStorage.getItem("adminToken");
+export const deleteFollower = async (req, res, next) => {
+  try {
+    const { id } = req.params;
 
-  return axios.delete(`${API}/followers/${id}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+    const follower = await Follower.findByIdAndDelete(id);
+
+    if (!follower) {
+      return res.status(404).json({
+        success: false,
+        message: "Follower not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Follower deleted successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
 };
+
 

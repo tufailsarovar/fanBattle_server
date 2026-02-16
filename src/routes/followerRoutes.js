@@ -33,16 +33,10 @@ router.get("/search", searchFollowers);
 router.get("/today", getTodayFollowers);
 
 /**
- * @desc    Get single follower by username
- * @route   GET /api/followers/:username
- */
-router.get("/:username", getFollowerByUsername);
-
-/**
  * @desc    Create new follower (Admin)
  * @route   POST /api/followers
  */
-router.post("/", adminAuth, createFollower);
+router.post("/", createFollower);
 
 /**
  * @desc    Update follower (Admin)
@@ -54,6 +48,13 @@ router.put("/:id", adminAuth, updateFollower);
  * @desc    Delete follower (Admin)
  * @route   DELETE /api/followers/:id
  */
-router.delete("/:id", adminAuth, deleteFollower);
+router.delete("/:id", deleteFollower);
+
+/**
+ * ⚠️ KEEP THIS LAST (to avoid route conflict)
+ * @desc    Get single follower by username
+ * @route   GET /api/followers/:username
+ */
+router.get("/:username", getFollowerByUsername);
 
 export default router;
