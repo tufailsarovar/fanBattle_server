@@ -17,14 +17,12 @@ export const initSocket = (server) => {
   });
 
   ioInstance.on("connection", (socket) => {
-    console.log(`Socket Connected: ${socket.id}`);
 
     socket.on("joinRoom", (room) => {
       socket.join(room);
     });
 
     socket.on("disconnect", () => {
-      console.log(`Socket Disconnected: ${socket.id}`);
     });
   });
 
