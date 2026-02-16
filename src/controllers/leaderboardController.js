@@ -14,7 +14,9 @@ const calculateTier = (likes) => {
  */
 export const getTop10AllTime = async (req, res, next) => {
   try {
-    const followers = await Follower.find().sort({ createdAt: -1 }).limit(10);
+    const followers = await Follower.find()
+      .sort({ likesCount: -1 })   // ✅ SORT BY LIKES DESC
+      .limit(10);
 
     const ranked = followers.map((f, index) => ({
       ...f.toObject(),
@@ -27,6 +29,7 @@ export const getTop10AllTime = async (req, res, next) => {
     next(error);
   }
 };
+
 
 /**
  * Get Daily Top 10
