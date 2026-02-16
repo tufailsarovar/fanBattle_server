@@ -9,10 +9,13 @@ const app = express();
 /* ================= CORS FIX ================= */
 app.use(
   cors({
-    origin: true,   // allow all localhost ports
+    origin: [
+      "https://fan-battle.vercel.app",
+    ],
     credentials: true,
   })
 );
+
 /* =========================================== */
 
 app.use(express.json());
