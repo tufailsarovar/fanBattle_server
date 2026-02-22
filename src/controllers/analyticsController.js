@@ -42,7 +42,17 @@ export const getOverviewStats = async (req, res, next) => {
     next(error);
   }
 };
-
+// =============================
+// TOTAL LIKES (FOR LIVE BANNER)
+// =============================
+export const getTotalLikes = async (req, res) => {
+  try {
+    const totalLikes = await Like.countDocuments();
+    res.json({ totalLikes });
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
 /**
  * @desc    Get likes growth (last 30 days)
  * @route   GET /api/analytics/likes-growth

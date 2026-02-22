@@ -2,6 +2,8 @@ import express from "express";
 import Follower from "../models/Follower.js";
 import Subscriber from "../models/Subscriber.js";
 import Like from "../models/Like.js";
+import { getTotalLikes } from "../controllers/analyticsController.js";
+
 
 const router = express.Router();
 
@@ -19,6 +21,21 @@ router.get("/overview", async (req, res) => {
       totalSubscribers,
       totalLikes,
     });
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+
+router.get("/total-likes", getTotalLikes);
+
+// =============================
+// 🔥 TOTAL LIKES (FOR LIVE BANNER)
+// =============================
+router.get("/total-likes", async (req, res) => {
+  try {
+    const totalLikes = await Like.countDocuments();
+    res.json({ totalLikes });
   } catch (error) {
     res.status(500).json({ message: "Server error" });
   }

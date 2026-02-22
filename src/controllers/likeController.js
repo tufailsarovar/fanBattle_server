@@ -1,6 +1,7 @@
 import Follower from "../models/Follower.js";
 import Like from "../models/Like.js";
 import Subscriber from "../models/Subscriber.js";
+import { emitLikeUpdate } from "../sockets/socketHandler.js";
 
 export const likeFollower = async (req, res) => {
   try {
@@ -15,7 +16,6 @@ export const likeFollower = async (req, res) => {
       return res.status(400).json({ message: "Username required" });
     }
 
-    // ✅ check subscriber first
     const subscriber = await Subscriber.findOne({
       username: likerUsername,
     });
@@ -24,14 +24,11 @@ export const likeFollower = async (req, res) => {
       return res.status(403).json({ message: "Only subscribers can like" });
     }
 
-    // ✅ find follower card by ID
     const follower = await Follower.findById(targetFollowerId);
 
     if (!follower) {
       return res.status(404).json({ message: "Follower not found" });
     }
-
-    const ip = req.ip;
 
     const existing = await Like.findOne({
       targetFollowerId: follower._id,
@@ -45,11 +42,17 @@ export const likeFollower = async (req, res) => {
     await Like.create({
       targetFollowerId: follower._id,
       likerUsername: likerUsername,
-      ipAddress: ip,
+      ipAddress: req.ip,
     });
 
     follower.likesCount += 1;
     await follower.save();
+
+    /* 🔥 LIVE EMIT */
+    emitLikeUpdate({
+      followerId: follower._id,
+      likesCount: follower.likesCount,
+    });
 
     res.json({
       success: true,
