@@ -1,22 +1,5 @@
-// server/src/config/env.js
-
 import dotenv from "dotenv";
-
 dotenv.config();
-
-const requiredEnv = [
-  "PORT",
-  "MONGO_URI",
-  "REDIS_URL",
-  "CLIENT_URL",
-  "ADMIN_URL",
-];
-
-requiredEnv.forEach((key) => {
-  if (!process.env[key]) {
-    throw new Error(`Missing required environment variable: ${key}`);
-  }
-});
 
 export const env = {
   PORT: process.env.PORT || 5000,
